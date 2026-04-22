@@ -1,74 +1,98 @@
-# SQLite to MySQL Dönüştürücü
+# SQLite to MySQL Converter
 
-SQLite veritabanlarını MySQL uyumlu SQL formatına dönüştürmek için geliştirilmiş Python tabanlı araç.
+Python-based tool to convert SQLite databases to MySQL compatible SQL dump files.
 
-## Geliştirme Geçmişi
+## Features
 
-Bu proje başlangıçta SQLite veritabanlarını MySQL'e dönüştürme yeteneğine sahipti ancak bazı veri türü uyumluluk sorunları içeriyordu. Bu sorunlar tespit edilip çözülmüştür.
+- ✅ Convert SQLite databases to MySQL SQL dumps
+- ✅ Export both table structures and data
+- ✅ Automatic data type conversion
+- ✅ UTF-8 character encoding support
+- ✅ Graceful handling of interrupted operations
+- ✅ Engine and charset configuration
 
-## Fixlenen Sorunlar
+## Fixed Issues
 
-### 1. Varchar Uzunluğu Sorunu
-**Sorun:** SQLite'de `varchar` alanlar uzunluk belirtmeden tanımlanabiliyor, ancak MySQL bu durumda syntax hatası veriyor.
+### 1. VARCHAR Length Issue
+**Problem:** SQLite `varchar` fields can be defined without length, but MySQL requires length specification.
 
-**Örnek Hatalı Tanım:**
-```sql
-CREATE TABLE `migrations` (`migration` varchar NOT NULL, `batch` INT NOT NULL)
+**Solution:** Automatically adds default length `varchar(255)` to all varchar fields.
+
+### 2. Numeric Data Type Compatibility
+**Problem:** SQLite `numeric` types cause incompatibility issues in MySQL.
+
+**Solution:** Converts `numeric` types to `decimal(10,2)` format.
+
+## Installation
+
+```bash
+# Clone the repository
+git clone https://github.com/canekremdura/sqlite-to-mysql-main-fix.git
+cd sqlite-to-mysql-main-fix
 ```
 
-**MySQL Hatası:**
-```
-#1064 - You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'NOT NULL, `batch` INT NOT NULL) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE...' at line 2
-```
+No additional dependencies required! Uses Python standard library.
 
-**Çözüm:** Tüm `varchar` alanlara `varchar(255)` gibi uzunluk belirtildi.
+## Usage
 
-### 2. Numeric Veri Türü Uyumsuzluğu
-**Sorun:** SQLite'de `numeric` veri türleri doğrudan MySQL'e aktarılınca uyumsuzluk oluşabiliyor.
+```bash
+# Basic usage
+python export.py database.sqlite
 
-**Çözüm:** `numeric` veri türleri uygun `decimal(10,2)` formata dönüştürüldü.
-
-## Uygulanan Düzeltmeler
-
-Düzeltmeler doğrudan `sqlite_to_mysql_type` fonksiyonuna entegre edilmiştir ve şu dönüşümleri içerir:
-
-- `varchar` türlerine otomatik olarak `varchar(255)` gibi uzunluk eklenir
-- `numeric` türleri `decimal(10,2)` formatına dönüştürülür
-- `char`, `varbinary`, `binary` gibi türler için de varsayılan uzunluklar tanımlanmıştır
-
-## Özellikler
-
-- SQLite veritabanı dosyalarını MySQL uyumlu SQL dump dosyalarına dönüştürme
-- Tüm tablo yapılarını ve verileri koruma
-- MySQL uyumlu veri türü dönüştürme
-- Ctrl+C ile kesintiye uğramış işlemleri zarif sonlandırma
-- UTF-8 karakter kodlaması desteği
-
-## Gereksinimler
-
-- Python 3.x
-- SQLite veritabanı dosyası
-- MySQL (dönüştürülen dosyayı içe aktarmak için)
-
-## Kullanım
-
-1. Proje klasörüne gidin
-2. SQLite dosyanızı dönüştürmek için aşağıdaki komutu çalıştırın:
-
-```
-python export.py <sqlite_db_file> [mysql_dump_file]
+# With output file
+python export.py database.sqlite output.sql
 ```
 
-Örnek:
-```
+### Example
+
+```bash
 python export.py veritabani.sqlite cikti.sql
 ```
 
-## Geliştirici Bilgisi
+## Output
 
-**Orijinal Geliştirici:** Majid Alavizadeh 
-**Düzeltmeler ve Geliştirmeler:** Can Ekrem Dura
+The converter generates a MySQL-compatible SQL file with:
+- Table creation statements with proper data types
+- INSERT statements for all data
+- UTF-8 charset configuration
+- InnoDB engine specification
 
-## Lisans
+## Data Type Mappings
 
-Bu proje MIT Lisansı ile lisanslanmıştır.
+| SQLite | MySQL |
+|--------|-------|
+| `varchar` | `varchar(255)` |
+| `numeric` | `decimal(10,2)` |
+| `char` | `char(1)` |
+| `int` | `int` |
+| `integer` | `int` |
+| `real` | `decimal(10,3)` |
+| `blob` | `blob` |
+| `text` | `text` |
+
+## Requirements
+
+- Python 3.x
+- SQLite database file
+
+## License
+
+MIT License
+
+## Credits
+
+**Original Developer:** Majid Alavizadeh  
+**Fixes and Improvements:** Can Ekrem Dura
+
+## Author
+
+**Can Ekrem Dura**
+
+[GitHub Profile](https://github.com/canekremdura)
+
+---
+
+*Check out my other projects:*
+- [csv-to-json-cli](https://github.com/canekremdura/csv-to-json-cli) - CSV to JSON converter
+- [Mackolik-Bot](https://github.com/canekremdura/Mackolik-Bot) - Football match data scraper
+- [wp-custom-variation-swatches](https://github.com/canekremdura/wp-custom-variation-swatches) - WooCommerce swatches
