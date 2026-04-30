@@ -1,98 +1,60 @@
-# SQLite to MySQL Converter
+# 🗄️ SQLite to MySQL Converter
 
-Python-based tool to convert SQLite databases to MySQL compatible SQL dump files.
+![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)
+![SQLite](https://img.shields.io/badge/Database-SQLite-003B57.svg)
+![MySQL](https://img.shields.io/badge/Database-MySQL-4479A1.svg)
 
-## Features
+A practical and robust Python script designed to seamlessly migrate or convert your SQLite databases into MySQL-compatible SQL dump files.
 
-- ✅ Convert SQLite databases to MySQL SQL dumps
-- ✅ Export both table structures and data
-- ✅ Automatic data type conversion
-- ✅ UTF-8 character encoding support
-- ✅ Graceful handling of interrupted operations
-- ✅ Engine and charset configuration
+## 🌟 Features
 
-## Fixed Issues
+*   **Automated Schema Translation:** Intelligently maps SQLite data types (TEXT, INTEGER, REAL, etc.) to their MySQL equivalents (VARCHAR, INT, DECIMAL, etc.).
+*   **Data Export:** Generates standard `INSERT INTO` statements compatible with MySQL servers.
+*   **Table Generation:** Recreates table structures with appropriate MySQL engines (e.g., InnoDB) and charsets (e.g., utf8mb4).
+*   **Easy to Use:** Run it directly via the command line with simple arguments.
 
-### 1. VARCHAR Length Issue
-**Problem:** SQLite `varchar` fields can be defined without length, but MySQL requires length specification.
+## ⚙️ Installation
 
-**Solution:** Automatically adds default length `varchar(255)` to all varchar fields.
+1.  **Clone the repository:**
+    ```bash
+    git clone https://github.com/canekremdura/sqlite-to-mysql-main-fix.git
+    cd sqlite-to-mysql-main-fix
+    ```
 
-### 2. Numeric Data Type Compatibility
-**Problem:** SQLite `numeric` types cause incompatibility issues in MySQL.
+2.  **Environment Setup:**
+    The script primarily relies on the built-in `sqlite3` Python library. You just need Python installed.
+    ```bash
+    python --version
+    ```
 
-**Solution:** Converts `numeric` types to `decimal(10,2)` format.
+## 🚀 Usage
 
-## Installation
+Execute the script by providing your source SQLite database file. You can optionally specify an output file name.
 
+**Basic Usage:**
 ```bash
-# Clone the repository
-git clone https://github.com/canekremdura/sqlite-to-mysql-main-fix.git
-cd sqlite-to-mysql-main-fix
-```
-
-No additional dependencies required! Uses Python standard library.
-
-## Usage
-
-```bash
-# Basic usage
 python export.py database.sqlite
+```
+*This will create a `database.sql` dump file in the same directory.*
 
-# With output file
-python export.py database.sqlite output.sql
+**Specifying Output File:**
+```bash
+python export.py database.sqlite my_mysql_dump.sql
 ```
 
-### Example
+**Additional Flags:**
+*   `--no-drop`: Prevents adding `DROP TABLE IF EXISTS` statements in the generated SQL file.
+    ```bash
+    python export.py database.sqlite --no-drop
+    ```
+
+## 📥 Importing to MySQL
+
+Once you have generated the `.sql` file, you can easily import it into your MySQL database:
 
 ```bash
-python export.py veritabani.sqlite cikti.sql
+mysql -u your_username -p your_database_name < my_mysql_dump.sql
 ```
 
-## Output
-
-The converter generates a MySQL-compatible SQL file with:
-- Table creation statements with proper data types
-- INSERT statements for all data
-- UTF-8 charset configuration
-- InnoDB engine specification
-
-## Data Type Mappings
-
-| SQLite | MySQL |
-|--------|-------|
-| `varchar` | `varchar(255)` |
-| `numeric` | `decimal(10,2)` |
-| `char` | `char(1)` |
-| `int` | `int` |
-| `integer` | `int` |
-| `real` | `decimal(10,3)` |
-| `blob` | `blob` |
-| `text` | `text` |
-
-## Requirements
-
-- Python 3.x
-- SQLite database file
-
-## License
-
-MIT License
-
-## Credits
-
-**Original Developer:** Majid Alavizadeh  
-**Fixes and Improvements:** Can Ekrem Dura
-
-## Author
-
-**Can Ekrem Dura**
-
-[GitHub Profile](https://github.com/canekremdura)
-
----
-
-*Check out my other projects:*
-- [csv-to-json-cli](https://github.com/canekremdura/csv-to-json-cli) - CSV to JSON converter
-- [Mackolik-Bot](https://github.com/canekremdura/Mackolik-Bot) - Football match data scraper
-- [wp-custom-variation-swatches](https://github.com/canekremdura/wp-custom-variation-swatches) - WooCommerce swatches
+## 📄 License
+Open source and available for modification. See project files for details.
